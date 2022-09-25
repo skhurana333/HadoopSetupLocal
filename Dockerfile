@@ -44,7 +44,8 @@ RUN mv /usr/local/spark/conf/spark-defaults.conf.template /usr/local/spark/conf/
 RUN echo "spark.master    yarn" >> /usr/local/spark/conf/spark-defaults.conf
 RUN echo "spark.eventLog.enabled  true" >>  /usr/local/spark/conf/spark-defaults.conf
 RUN echo "spark.history.provider            org.apache.spark.deploy.history.FsHistoryProvider"  >>  /usr/local/spark/conf/spark-defaults.conf
-RUN echo "spark.eventLog.dir hdfs://0.0.0.0:9000/spark-events" >>  /usr/local/spark/conf/spark-defaults.conf
+RUN echo "spark.eventLog.dir file:///tmp/spark-events" >>  /usr/local/spark/conf/spark-defaults.conf
+RUN echo "spark.history.fs.logDirectory   file:///tmp/spark-events"  >>  /usr/local/spark/conf/spark-defaults.conf
 RUN echo "spark.history.fs.update.interval  10s" >>  /usr/local/spark/conf/spark-defaults.conf
 RUN echo "spark.history.ui.port             18080" >>  /usr/local/spark/conf/spark-defaults.conf
 
