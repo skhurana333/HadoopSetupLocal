@@ -56,11 +56,6 @@ RUN echo "hadoop:hadoop" | chpasswd
 RUN mkdir -p /var/run/sshd
 RUN echo "mkdir -p /var/run/sshd" >> /etc/rc.local
 COPY docker-entrypoint.sh /docker-entrypoint.sh
-# COPY 1 GB  tpcsds test data
-RUN mkdir -p /testdata/data
-RUN mkdir /testdata/data_details
-COPY data /testdata/data
-COPY data_details  /testdata/data_details 
 RUN chmod +x /docker-entrypoint.sh
 
 #**************  hadoop user *********************
