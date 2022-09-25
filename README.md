@@ -22,11 +22,3 @@ df.write.parquet("hdfs://localhost:9000/tdata")
 
 - validate data is in hdfs -> hdfs dfs /tdata
 
-tpcsds Test Data
-===============
-- It has tpcds test data. 
-- data/ folder -> has test data seperated by  | character
-- data_details folders  -> has description, schema/count of this data
-- Please  untar the data in /data folder and uplaod to hdfs to use, if want to.
-
-
