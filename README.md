@@ -11,3 +11,22 @@ If Using Only On Local
 - Log in to container -> docker exec -it <containerId> bash 
 - Chech UIs from local laptop ->  localhost:9870 (name mode UI) , localhost:8088 (yarn UI) 
 
+Test 
+====
+- spark-shell
+- On Spark shell
+
+val data = Seq(("Java", "20000"), ("Python", "100000"), ("Scala", "3000"))
+val df = data.doDF
+df.write.parquet("hdfs://localhost:9000/tdata") 
+
+- validate data is in hdfs -> hdfs dfs /tdata
+
+tpcsds Test Data
+===============
+- It has tpcds test data. 
+- data/ folder -> has test data seperated by  | character
+- data_details folders  -> has description, schema/count of this data
+- The data will be loaded to /tpcds_data1gb  hdfs folder in the container
+
+
