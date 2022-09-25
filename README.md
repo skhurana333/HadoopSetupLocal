@@ -27,6 +27,6 @@ tpcsds Test Data
 - It has tpcds test data. 
 - data/ folder -> has test data seperated by  | character
 - data_details folders  -> has description, schema/count of this data
-- The data will be loaded to /tpcds_data1gb  hdfs folder in the container
+- Please  untar the data in /data folder and uplaod to hdfs to use, if want to.
 
 
