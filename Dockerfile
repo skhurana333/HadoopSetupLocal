@@ -13,11 +13,13 @@ RUN adduser hadoop
 RUN usermod -aG sudo hadoop
 
 
-# curl
+# curl etc
 RUN apt-get install -y curl
 RUN apt-get install -y wget
 RUN apt-get install -y vim
 RUN apt-get install -y net-tools
+RUN apt-get install -y apt-utils
+RUN apt-get install -y dialog
 
 # ssh setup
 RUN apt-get install -y openssh-server
@@ -82,6 +84,7 @@ ENV LD_LIBRARY_PATH=/usr/local/hadoop/lib/native:$LD_LIBRARY_PATH
 ENV HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
 ENV YARN_CONF_DIR=$HADOOP_HOME/etc/hadoop
 
+
 # setup envs vars, props  in Hadoop
 RUN echo "export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-arm64" >> $HADOOP_HOME/etc/hadoop/hadoop-env.sh
 RUN echo "export HADOOP_CLASSPATH+="$HADOOP_HOME/lib/*.jar""  >> $HADOOP_HOME/etc/hadoop/hadoop-env.sh 
@@ -140,6 +143,28 @@ RUN echo $'<configuration> \n\
       <value>mapreduce_shuffle</value> \n\
    </property> \n\
 </configuration>'  > $HADOOP_HOME/etc/hadoop/yarn-site.xml
+
+# mysql setup for hive
+# https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-20-04
+
+# postgreqSQL tryouts
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt install postgresql postgresql-contrib -f -y
+
+
+# Hive setup -http://www.sqlnosql.com/install-hive-on-hadoop-3-xx-on-ubuntu-with-postgresql-database/
+RUN wget https://dlcdn.apache.org/hive/hive-3.1.3/apache-hive-3.1.3-bin.tar.gz
+RUN tar -xvf apache-hive-3.1.3-bin.tar.gz
+RUN mv apache-hive-3.1.3-bin /usr/local/hive
+ENV HIVE_HOME=/usr/local/hive
+ENV PATH=$PATH:$HIVE_HOME/bin
+RUN cp $HIVE_HOME/conf/hive-env.sh.template $HIVE_HOME/conf/hive-env.sh
+RUN echo "export HADOOP_HEAPSIZE=512 " >> >> $HIVE_HOME/conf/hive-env.sh
+RUN echo "export HIVE_CONF_DIR=/usr/local/hive/conf" >> $HIVE_HOME/conf/hive-env.sh
+RUN echo "export HADOOP_HOME=/usr/local/hadoop" >> $HIVE_HOME/conf/hive-env.sh
+RUN cp /$HIVE_HOME/hcatalog/etc/hcatalog/proto-hive-site.xml $HIVE_HOME/conf/hive-site.xml
+
+
 
 # run ssh server
 ENTRYPOINT ["/docker-entrypoint.sh"]
