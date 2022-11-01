@@ -1,0 +1,6 @@
+6080 - For Ranger Admin UI
+9870
+8088 - Hdfs UI
+22 
+4040
+18080 - Spark UI

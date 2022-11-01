@@ -1,0 +1,1 @@
+ docker run -p 9870:9870  -p 8088:8088  -p 4040:4040 -p 18080:18080 -p 8080:8080 -p 6080:6080  -v ~/dummy:/hostdata  -d   e1ab1261cd99        tail -f /dev/null

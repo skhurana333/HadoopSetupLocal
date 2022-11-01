@@ -1,0 +1,4 @@
+Ranger UI (localhost:6080) 
+------------------------
+User Id - admin
+password - Welcome123

@@ -5,6 +5,8 @@ EXPOSE 8088
 EXPOSE 22
 EXPOSE 4040
 EXPOSE 18080
+EXPOSE 8983  
+EXPOSE 6080
 
 RUN  apt-get update && apt-get -y install sudo 
 
@@ -39,9 +41,10 @@ RUN mkdir /usr/local/hadoop/logs
 
 # spark
 RUN mkdir /tmp/spark-events
-RUN wget https://dlcdn.apache.org/spark/spark-3.3.0/spark-3.3.0-bin-hadoop3.tgz
-RUN tar -xvf spark-3.3.0-bin-hadoop3.tgz
-RUN mv spark-3.3.0-bin-hadoop3 /usr/local/spark
+RUN wget https://dlcdn.apache.org/spark/spark-3.3.1/spark-3.3.1-bin-hadoop3.tgz 
+#RUN wget https://dlcdn.apache.org/spark/spark-3.3.0/spark-3.3.0-bin-hadoop3.tgz
+RUN tar -xvf spark-3.3.1-bin-hadoop3.tgz
+RUN mv spark-3.3.1-bin-hadoop3 /usr/local/spark
 RUN mv /usr/local/spark/conf/spark-defaults.conf.template /usr/local/spark/conf/spark-defaults.conf
 RUN echo "spark.master    yarn" >> /usr/local/spark/conf/spark-defaults.conf
 RUN echo "spark.eventLog.enabled  true" >>  /usr/local/spark/conf/spark-defaults.conf
@@ -168,6 +171,25 @@ COPY hive-site.xml  $HIVE_HOME/conf/
 COPY postgresql-42.5.0.jar $HIVE_HOME/lib
 COPY postgresql-42.5.0.jar $SPARK_HOME/lib
 
+# solr setup for Ranger
+#RUN wget https://dlcdn.apache.org/solr/solr/9.0.0/solr-9.0.0.tgz
+#RUN tar -xvzf solr-9.0.0.tar.gz
+#RUN mv solr-9.0.0 /usr/local/solr 
+#ENV SOLR_HOME=/usr/local/solr
+#ENV PATH=$PATH:$SOLR_HOME/bin
+
+
+# ranger setup
+#RUN wget https://dlcdn.apache.org/ranger/2.3.0/apache-ranger-2.3.0.tar.gz 
+#RUN tar -xvzf apache-ranger-2.3.0.tar.gz 
+#WORKDIR apache-ranger-2.3.0
+#RUN mvn clean compile package install -DskipTests 
+RUN wget https://github.com/zer0beat/apache-ranger-compiled/releases/download/2.3.0/ranger-2.3.0-admin.tar.gz  
+RUN tar -xvzf ranger-2.3.0-admin.tar.gz 
+RUN mv ranger-2.3.0-admin /usr/local/
+COPY install.properties /usr/local/ranger-2.3.0-admin/
+
+WORKDIR /usr/local/ranger-2.3.0-admin/
 # run ssh server
 ENTRYPOINT ["/docker-entrypoint.sh"]
 

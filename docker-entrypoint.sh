@@ -19,4 +19,15 @@ su - postgres -c "createdb hivemetastoredb"
 sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'welcome';"
 echo "hive hivemetastored created"
 schematool -initSchema -dbType postgres
+
+# postgres user for ranger
+su - postgres -c "createdb ranger"
+sudo -u postgres psql -c "create user rangeradmin WITH PASSWORD 'welcome'; " 
+sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE ranger  TO rangeradmin;"
+
+# start ranger 
+
+/usr/local/ranger-2.3.0-admin/setup.sh
+ranger-admin start 
+
 exec "$@"
