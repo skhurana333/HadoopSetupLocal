@@ -27,9 +27,9 @@ RUN apt-get install -y openssh-client
 RUN apt-get install -y mlocate
 
 # jdk,ssh etc
-RUN apt-get install -y openjdk-11-jdk
+RUN apt-get install -y openjdk-8-jdk
 RUN apt-get install -y unzip
-ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-arm64
+ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-arm64
 
 # hadoop
 RUN wget https://downloads.apache.org/hadoop/common/hadoop-3.3.4/hadoop-3.3.4.tar.gz
@@ -86,7 +86,7 @@ ENV YARN_CONF_DIR=$HADOOP_HOME/etc/hadoop
 
 
 # setup envs vars, props  in Hadoop
-RUN echo "export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-arm64" >> $HADOOP_HOME/etc/hadoop/hadoop-env.sh
+RUN echo "export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-arm64" >> $HADOOP_HOME/etc/hadoop/hadoop-env.sh
 RUN echo "export HADOOP_CLASSPATH+="$HADOOP_HOME/lib/*.jar""  >> $HADOOP_HOME/etc/hadoop/hadoop-env.sh 
 RUN echo 'export HDFS_NAMENODE_USER=root'   >> $HADOOP_HOME/etc/hadoop/hadoop-env.sh
 RUN echo 'export HDFS_DATANODE_USER=root'  >> $HADOOP_HOME/etc/hadoop/hadoop-env.sh
@@ -144,29 +144,39 @@ RUN echo $'<configuration> \n\
    </property> \n\
 </configuration>'  > $HADOOP_HOME/etc/hadoop/yarn-site.xml
 
-# mysql setup for hive
-# https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-20-04
 
-# postgreqSQL tryouts
+# postgreqSQL
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt install postgresql postgresql-contrib -f -y
 
 
 # Hive setup -http://www.sqlnosql.com/install-hive-on-hadoop-3-xx-on-ubuntu-with-postgresql-database/
+# ALTER USER postgres PASSWORD  'welcome123';
+#
+#
 RUN wget https://dlcdn.apache.org/hive/hive-3.1.3/apache-hive-3.1.3-bin.tar.gz
 RUN tar -xvf apache-hive-3.1.3-bin.tar.gz
 RUN mv apache-hive-3.1.3-bin /usr/local/hive
 ENV HIVE_HOME=/usr/local/hive
 ENV PATH=$PATH:$HIVE_HOME/bin
 RUN cp $HIVE_HOME/conf/hive-env.sh.template $HIVE_HOME/conf/hive-env.sh
-RUN echo "export HADOOP_HEAPSIZE=512 " >> >> $HIVE_HOME/conf/hive-env.sh
+RUN echo "export HADOOP_HEAPSIZE=512 " >>  $HIVE_HOME/conf/hive-env.sh
 RUN echo "export HIVE_CONF_DIR=/usr/local/hive/conf" >> $HIVE_HOME/conf/hive-env.sh
 RUN echo "export HADOOP_HOME=/usr/local/hadoop" >> $HIVE_HOME/conf/hive-env.sh
-RUN cp /$HIVE_HOME/hcatalog/etc/hcatalog/proto-hive-site.xml $HIVE_HOME/conf/hive-site.xml
 
-
+COPY hive-site.xml  $HIVE_HOME/conf/
+COPY postgresql-42.5.0.jar $HIVE_HOME/lib
+COPY postgresql-42.5.0.jar $SPARK_HOME/lib
 
 # run ssh server
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
 
+# in case no space error
+# docker builder prune -a
+# docker system prune -a --volumes
+# docker container prune
+# docker image prune
+# docker volume prune
+
+# docker rmi -f $(docker images -f "dangling=true") - not working yet
