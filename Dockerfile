@@ -22,6 +22,7 @@ RUN apt-get install -y vim
 RUN apt-get install -y net-tools
 RUN apt-get install -y apt-utils
 RUN apt-get install -y dialog
+RUN apt-get install -y python-is-python3
 
 # ssh setup
 RUN apt-get install -y openssh-server
@@ -147,7 +148,7 @@ RUN echo $'<configuration> \n\
    </property> \n\
 </configuration>'  > $HADOOP_HOME/etc/hadoop/yarn-site.xml
 
-
+RUN apt-get update 
 # postgreqSQL
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt install postgresql postgresql-contrib -f -y
@@ -180,16 +181,32 @@ COPY postgresql-42.5.0.jar $SPARK_HOME/lib
 
 
 # ranger setup
-#RUN wget https://dlcdn.apache.org/ranger/2.3.0/apache-ranger-2.3.0.tar.gz 
-#RUN tar -xvzf apache-ranger-2.3.0.tar.gz 
-#WORKDIR apache-ranger-2.3.0
-#RUN mvn clean compile package install -DskipTests 
 RUN wget https://github.com/zer0beat/apache-ranger-compiled/releases/download/2.3.0/ranger-2.3.0-admin.tar.gz  
 RUN tar -xvzf ranger-2.3.0-admin.tar.gz 
 RUN mv ranger-2.3.0-admin /usr/local/
 COPY install.properties /usr/local/ranger-2.3.0-admin/
 
+# ranger hdfs plugin
+RUN wget https://github.com/zer0beat/apache-ranger-compiled/releases/download/2.3.0/ranger-2.3.0-hdfs-plugin.tar.gz 
+RUN tar -xvzf ranger-2.3.0-hdfs-plugin.tar.gz 
+RUN mv ranger-2.3.0-hdfs-plugin /usr/local/
+
+
+# users for ranger access control
+RUN groupadd --gid 3333 devgroup \
+    && useradd --uid 3333 --gid devgroup --shell /bin/bash --create-home devuser
+
+RUN wget https://github.com/zer0beat/apache-ranger-compiled/releases/download/2.3.0/ranger-2.3.0-usersync.tar.gz 
+RUN tar -xvzf ranger-2.3.0-usersync.tar.gz
+RUN mv ranger-2.3.0-usersync /usr/local/
+ENV PATH=$PATH:/usr/local/ranger-2.3.0-usersync/bin
+COPY usersync-install.properties /usr/local/ranger-2.3.0-usersync/install.properties
+COPY ranger-ugsync-default.xml /usr/local/ranger-2.3.0-usersync/ranger-ugsync-default.xml
+COPY logback.xml /usr/local/ranger-2.3.0-usersync/conf/logback.xml
+COPY hdfs-plugin-install.properties /usr/local/ranger-2.3.0-hdfs-plugin/install.properties
 WORKDIR /usr/local/ranger-2.3.0-admin/
+
+
 # run ssh server
 ENTRYPOINT ["/docker-entrypoint.sh"]
 

@@ -26,8 +26,15 @@ sudo -u postgres psql -c "create user rangeradmin WITH PASSWORD 'welcome'; "
 sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE ranger  TO rangeradmin;"
 
 # start ranger 
-
 /usr/local/ranger-2.3.0-admin/setup.sh
 ranger-admin start 
+
+# start ranger hdfs plugin
+/usr/local/ranger-2.3.0-hdfs-plugin/enable-hdfs-plugin.sh
+
+# setup and start ranger usersync service
+cd /usr/local/ranger-2.3.0-usersync
+/usr/local/ranger-2.3.0-usersync/setup.sh
+ranger-usersync start
 
 exec "$@"
