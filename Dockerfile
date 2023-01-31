@@ -198,12 +198,12 @@ RUN groupadd --gid 3333 devgroup \
 
 RUN wget https://github.com/zer0beat/apache-ranger-compiled/releases/download/2.3.0/ranger-2.3.0-usersync.tar.gz 
 RUN tar -xvzf ranger-2.3.0-usersync.tar.gz
-RUN mv ranger-2.3.0-usersync /usr/local/
-ENV PATH=$PATH:/usr/local/ranger-2.3.0-usersync/bin
-COPY usersync-install.properties /usr/local/ranger-2.3.0-usersync/install.properties
-COPY ranger-ugsync-default.xml /usr/local/ranger-2.3.0-usersync/ranger-ugsync-default.xml
-COPY logback.xml /usr/local/ranger-2.3.0-usersync/conf/logback.xml
+RUN mv ranger-2.3.0-usersync /usr/local/usersync
+ENV PATH=$PATH:/usr/local/usersync/bin
+COPY usersync-install.properties /usr/local/usersync/install.properties
 COPY hdfs-plugin-install.properties /usr/local/ranger-2.3.0-hdfs-plugin/install.properties
+COPY hdfs-plugin-install.properties /usr/local/ranger-2.3.0-hdfs-plugin/install.properties
+COPY logback.xml /usr/local/usersync/conf.dist/logback.xml
 WORKDIR /usr/local/ranger-2.3.0-admin/
 
 

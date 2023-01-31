@@ -31,10 +31,13 @@ ranger-admin start
 
 # start ranger hdfs plugin
 /usr/local/ranger-2.3.0-hdfs-plugin/enable-hdfs-plugin.sh
+stop-all.sh
+start-all.sh
 
 # setup and start ranger usersync service
-cd /usr/local/ranger-2.3.0-usersync
-/usr/local/ranger-2.3.0-usersync/setup.sh
+cd /usr/local/usersync
+/usr/local/usersync/setup.sh
 ranger-usersync start
+
 
 exec "$@"
