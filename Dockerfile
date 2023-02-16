@@ -27,7 +27,7 @@ RUN apt-get install -y mlocate
 # jdk,ssh etc
 RUN apt-get install -y openjdk-11-jdk
 RUN apt-get install -y unzip
-ENV JAVA_HOME=echo $(readlink -nf $(which java) | xargs dirname | xargs dirname )
+RUN export JAVA_HOME=echo $(readlink -nf $(which java) | xargs dirname | xargs dirname )
 
 # hadoop
 RUN wget https://downloads.apache.org/hadoop/common/hadoop-3.3.4/hadoop-3.3.4.tar.gz
