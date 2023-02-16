@@ -6,6 +6,7 @@ EXPOSE 22
 EXPOSE 4040
 EXPOSE 18080
 
+ENV spark_version=3.3.4
 RUN  apt-get update && apt-get -y install sudo 
 
 # users etc
@@ -37,9 +38,9 @@ RUN mkdir /usr/local/hadoop/logs
 
 # spark
 RUN mkdir /tmp/spark-events
-RUN wget https://dlcdn.apache.org/spark/spark-3.3.2/spark-3.3.2-bin-hadoop3.tgz
-RUN tar -xvf spark-3.3.0-bin-hadoop3.tgz
-RUN mv spark-3.3.0-bin-hadoop3 /usr/local/spark
+RUN wget https://dlcdn.apache.org/spark/spark-${spark_version}/spark-${spark_version}-bin-hadoop3.tgz
+RUN tar -xvf spark-${spark_version}-bin-hadoop3.tgz
+RUN mv spark-${spark_version}-bin-hadoop3 /usr/local/spark
 RUN mv /usr/local/spark/conf/spark-defaults.conf.template /usr/local/spark/conf/spark-defaults.conf
 RUN echo "spark.master    yarn" >> /usr/local/spark/conf/spark-defaults.conf
 RUN echo "spark.eventLog.enabled  true" >>  /usr/local/spark/conf/spark-defaults.conf
