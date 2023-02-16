@@ -83,7 +83,7 @@ ENV HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
 ENV YARN_CONF_DIR=$HADOOP_HOME/etc/hadoop
 
 # setup envs vars, props  in Hadoop
-RUN echo "export JAVA_HOME=echo $(readlink -nf $(which java) | xargs dirname | xargs dirname )" >> $HADOOP_HOME/etc/hadoop/hadoop-env.sh
+RUN echo "export JAVA_HOME=$(readlink -nf $(which java) | xargs dirname | xargs dirname )" >> $HADOOP_HOME/etc/hadoop/hadoop-env.sh
 RUN echo "export HADOOP_CLASSPATH+="$HADOOP_HOME/lib/*.jar""  >> $HADOOP_HOME/etc/hadoop/hadoop-env.sh 
 RUN echo 'export HDFS_NAMENODE_USER=root'   >> $HADOOP_HOME/etc/hadoop/hadoop-env.sh
 RUN echo 'export HDFS_DATANODE_USER=root'  >> $HADOOP_HOME/etc/hadoop/hadoop-env.sh
