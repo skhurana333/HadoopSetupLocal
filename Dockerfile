@@ -27,7 +27,7 @@ RUN apt-get install -y mlocate
 # jdk,ssh etc
 RUN apt-get install -y openjdk-11-jdk
 RUN apt-get install -y unzip
-ENV JAVA_HOME=$(readlink -nf $(which java) | xargs dirname | xargs dirname )
+ENV JAVA_HOME=echo $(readlink -nf $(which java) | xargs dirname | xargs dirname )
 
 # hadoop
 RUN wget https://downloads.apache.org/hadoop/common/hadoop-3.3.4/hadoop-3.3.4.tar.gz
@@ -83,7 +83,7 @@ ENV HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
 ENV YARN_CONF_DIR=$HADOOP_HOME/etc/hadoop
 
 # setup envs vars, props  in Hadoop
-RUN echo "export JAVA_HOME=$(readlink -nf $(which java) | xargs dirname | xargs dirname )" >> $HADOOP_HOME/etc/hadoop/hadoop-env.sh
+RUN echo "export JAVA_HOME=echo $(readlink -nf $(which java) | xargs dirname | xargs dirname )" >> $HADOOP_HOME/etc/hadoop/hadoop-env.sh
 RUN echo "export HADOOP_CLASSPATH+="$HADOOP_HOME/lib/*.jar""  >> $HADOOP_HOME/etc/hadoop/hadoop-env.sh 
 RUN echo 'export HDFS_NAMENODE_USER=root'   >> $HADOOP_HOME/etc/hadoop/hadoop-env.sh
 RUN echo 'export HDFS_DATANODE_USER=root'  >> $HADOOP_HOME/etc/hadoop/hadoop-env.sh
