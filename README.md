@@ -2,6 +2,13 @@ Docker image having hdfs, yarn, Spark for testing on local laptop.
 Spark is configured to work with Yarn.
 Please use below command to start the container 
 
+Push to Docker Hub
+===================
+(rename skhurana333/spark33_and_hadoop334_mac to change mac to the env you are using)
+- docker build -t skhurana333/skhurana333/spark33_and_hadoop334_mac:v1 .
+- docker push skhurana333/spark33_and_hadoop334_mac:v1
+
+
 If Using Only On Local
 ========================
 - To create image -> docker build . 
