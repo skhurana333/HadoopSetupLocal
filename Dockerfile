@@ -37,9 +37,9 @@ RUN mkdir /usr/local/hadoop/logs
 
 # spark
 RUN mkdir /tmp/spark-events
-RUN wget https://dlcdn.apache.org/spark/spark-=3.3.4/spark-=3.3.4-bin-hadoop3.tgz
-RUN tar -xvf spark-=3.3.4-bin-hadoop3.tgz
-RUN mv spark-=3.3.4-bin-hadoop3 /usr/local/spark
+RUN wget https://dlcdn.apache.org/spark/spark-3.3.2/spark-3.3.2-bin-hadoop3.tgz
+RUN tar -xvf spark-3.3.2-bin-hadoop3.tgz
+RUN mv spark-3.3.2-bin-hadoop3 /usr/local/spark
 RUN mv /usr/local/spark/conf/spark-defaults.conf.template /usr/local/spark/conf/spark-defaults.conf
 RUN echo "spark.master    yarn" >> /usr/local/spark/conf/spark-defaults.conf
 RUN echo "spark.eventLog.enabled  true" >>  /usr/local/spark/conf/spark-defaults.conf
