@@ -1,4 +1,5 @@
 #!/bin/bash
+mkdir /tmp/spark-events
 service ssh restart
 hdfs namenode -format
 start-dfs.sh
